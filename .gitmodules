@@ -1,0 +1,3 @@
+[submodule "modules/rxp-android"]
+	path = modules/rxp-android
+	url = https://github.com/realexpayments/rxp-android.git
