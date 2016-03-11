@@ -1,16 +1,38 @@
 package com.github.matt.williams.qoinz.android;
 
+import com.realexpayments.hpp.HPPError;
+import com.realexpayments.hpp.HPPManager;
+import com.realexpayments.hpp.HPPManagerListener;
+
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements HPPManagerListener {
+
+	private static final String TAG = "MainActivity";
+	private HPPManager mHppManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		mHppManager = new HPPManager();
+		Resources res = getResources();
+		mHppManager.setHppRequestProducerURL(res.getString(R.string.hpp_request_producer_url));
+		mHppManager.setHppURL(res.getString(R.string.hpp_url));
+		mHppManager.setHppResponseConsumerURL(res.getString(R.string.hpp_response_consumer_url));
+		
+		Fragment hppManagerFragment = mHppManager.newInstance();
+		getFragmentManager()
+		         .beginTransaction()       
+		         .add(R.id.fragment_container, hppManagerFragment)    
+		         .commit();		
 	}
 
 	@Override
@@ -30,5 +52,20 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void hppManagerCompletedWithResult(Object t) {
+		Log.e(TAG, "Completed with result: " + t);
+	}
+
+	@Override
+	public void hppManagerFailedWithError(HPPError error) {
+		Log.e(TAG, "Failed with error: " + error);
+	}
+
+	@Override
+	public void hppManagerCancelled() {
+		Log.e(TAG, "Cancelled");
 	}
 }
