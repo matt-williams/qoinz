@@ -228,7 +228,7 @@ void checkForQoin() {
     // Returns 05 78 80 70 02 A5 46C
     mfrc522.PCD_CalculateCRC(apdu, apdu_len, &apdu[apdu_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu, apdu_len + 2, back, &back_len, NULL, 0, true)) != 0) {
-      Serial.println(sc);
+      //Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
       return;

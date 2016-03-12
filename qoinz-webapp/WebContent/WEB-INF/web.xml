@@ -35,4 +35,14 @@
         <url-pattern>/response-consumer</url-pattern>
     </servlet-mapping>
 
+	<servlet>
+        <servlet-name>GetTokenServlet</servlet-name>
+        <servlet-class>com.github.matt.williams.qoinz.webapp.GetTokenServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetTokenServlet</servlet-name>
+        <url-pattern>/get-token</url-pattern>
+    </servlet-mapping>
+
 </web-app>     

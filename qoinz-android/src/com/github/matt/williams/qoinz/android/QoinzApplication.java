@@ -69,7 +69,7 @@ public class QoinzApplication extends Application {
 		} else if (mIsInRegion) {
 			Notification notification = new Notification.Builder(this)
 			.setContentTitle("Qoinz Payment")
-			.setContentText("Buy Qoinz")
+			.setContentText("Near Qoinz machines - buy Qoinz")
 			.setSmallIcon(R.drawable.ic_notification)
 			.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, BuyQoinzActivity.class), 0))
 			.build();
@@ -77,9 +77,10 @@ public class QoinzApplication extends Application {
 		} else if (mWasInRegion) {
 			Notification notification = new Notification.Builder(this)
 			.setContentTitle("Qoinz Payment")
-			.setContentText("Sell Qoinz")
+			.setContentText("Left Qoinz machines - sell Qoinz")
 			.setSmallIcon(R.drawable.ic_notification)
 			.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, SellQoinzActivity.class), 0))
+			.setAutoCancel(true)
 			.build();
 			mNotificationManager.notify(ID_NOTIFICATION, notification);
 		} else {

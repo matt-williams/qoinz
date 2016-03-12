@@ -14,11 +14,13 @@ public class RequestProducerServlet extends HppServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse rsp) throws IOException {
 		HppRequest hppRequest = new HppRequest()
+		.addAmount(100)
+		.addCurrency("GBP")
 		.addMerchantId(mHppMerchantId)
 		.addAutoSettleFlag(true)
-		.addCardStorageEnable(true)
-		.addOfferSaveCard(true)
-		.addPayerExists(false);
+        .addCardStorageEnable(true)
+        .addOfferSaveCard(true)
+        .addPayerExists(false);
 		RealexHpp realexHpp = new RealexHpp(mHppSecret);
 		String requestJson = realexHpp.requestToJson(hppRequest);
 		rsp.getOutputStream().print(requestJson);

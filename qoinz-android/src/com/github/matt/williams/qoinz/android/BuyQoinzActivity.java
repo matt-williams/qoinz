@@ -19,6 +19,7 @@ public class BuyQoinzActivity extends Activity implements HPPManagerListener {
 
 	private static final String TAG = "BuyQoinzActivity";
 	private static final String KEY_NUM_QOINZ = "numQoinz";
+	private static final String KEY_QOINZ_ID = "qoinzId";
 	private HPPManager mHppManager;
 	private Fragment mHppManagerFragment = null;
 	private int mNumQoinz;
@@ -85,6 +86,7 @@ public class BuyQoinzActivity extends Activity implements HPPManagerListener {
 			mHppManager.setCardPaymentButtonText("Buy " + numQoinz + " for " + "£" + cost);;
 			mNumQoinz = numQoinz;
 			mHppManager.setSupplementaryData(KEY_NUM_QOINZ, Integer.toString(numQoinz));
+			mHppManager.setSupplementaryData(KEY_QOINZ_ID, QoinCounter.getId(this));
 			mHppManagerFragment = mHppManager.newInstance();
 			getFragmentManager()
 			.beginTransaction()       

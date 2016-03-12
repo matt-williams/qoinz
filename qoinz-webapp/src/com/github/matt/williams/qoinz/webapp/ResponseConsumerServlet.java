@@ -1,6 +1,5 @@
 package com.github.matt.williams.qoinz.webapp;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,9 +14,15 @@ public class ResponseConsumerServlet extends HppServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse rsp) throws IOException {
 		String responseJson = req.getParameter("hppResponse");
-		RealexHpp realexHpp = new RealexHpp("secret");
+		RealexHpp realexHpp = new RealexHpp(mHppSecret);
 		HppResponse hppResponse = realexHpp.responseFromJson(responseJson);
 		String result = hppResponse.getResult();
+		String numQoinzStr = hppResponse.getSupplementaryData().get("numQoinz");
+		String id = hppResponse.getSupplementaryData().get("qoinzId");
+		if ((numQoinzStr != null) && (id != null)) {
+			int numQoinz = Integer.parseInt(numQoinzStr);
+			QoinsDatabase.getInstance().add(id, numQoinz);
+		}
 		//String message = hppResponse.getMessage();
 		//String authCode = hppResponse.getAuthCode();
 		rsp.getOutputStream().print("{\"result\":\"" + result + "\"}");
