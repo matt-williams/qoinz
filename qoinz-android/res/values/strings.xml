@@ -4,8 +4,8 @@
     <string name="app_name">Qoinz</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="hpp_request_producer_url">https://myserver.com/hppRequestProducer</string>
+    <string name="hpp_request_producer_url">http://52.87.245.160/qoinz-webapp/request-producer</string>
     <string name="hpp_url">https://hpp.sandbox.realexpayments.com/pay</string>
-    <string name="hpp_response_consumer_url">https://myserver.com/hppResponseConsumer</string>
+    <string name="hpp_response_consumer_url">http://52.87.245.160/qoinz-webapp/response-consumer</string>
     
 </resources>

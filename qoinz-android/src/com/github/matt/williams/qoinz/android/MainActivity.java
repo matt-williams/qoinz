@@ -16,6 +16,7 @@ public class MainActivity extends Activity implements HPPManagerListener {
 
 	private static final String TAG = "MainActivity";
 	private HPPManager mHppManager;
+	private Fragment mHppManagerFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +29,10 @@ public class MainActivity extends Activity implements HPPManagerListener {
 		mHppManager.setHppURL(res.getString(R.string.hpp_url));
 		mHppManager.setHppResponseConsumerURL(res.getString(R.string.hpp_response_consumer_url));
 		
-		Fragment hppManagerFragment = mHppManager.newInstance();
+		mHppManagerFragment = mHppManager.newInstance();
 		getFragmentManager()
 		         .beginTransaction()       
-		         .add(R.id.fragment_container, hppManagerFragment)    
+		         .add(R.id.fragment_container, mHppManagerFragment)    
 		         .commit();		
 	}
 
@@ -57,15 +58,18 @@ public class MainActivity extends Activity implements HPPManagerListener {
 	@Override
 	public void hppManagerCompletedWithResult(Object t) {
 		Log.e(TAG, "Completed with result: " + t);
+		getFragmentManager().beginTransaction().remove(mHppManagerFragment).commit(); 
 	}
 
 	@Override
 	public void hppManagerFailedWithError(HPPError error) {
 		Log.e(TAG, "Failed with error: " + error);
+		getFragmentManager().beginTransaction().remove(mHppManagerFragment).commit(); 
 	}
 
 	@Override
 	public void hppManagerCancelled() {
 		Log.e(TAG, "Cancelled");
+		getFragmentManager().beginTransaction().remove(mHppManagerFragment).commit(); 
 	}
 }
