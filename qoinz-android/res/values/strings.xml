@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Qoinz</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="qoinz_payment">Qoinz Payment</string>
     <string name="action_settings">Settings</string>
     <string name="hpp_request_producer_url">http://52.87.245.160/qoinz-webapp/request-producer</string>
     <string name="hpp_url">https://hpp.sandbox.realexpayments.com/pay</string>

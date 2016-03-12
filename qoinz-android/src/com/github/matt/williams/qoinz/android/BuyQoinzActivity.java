@@ -100,7 +100,7 @@ public class BuyQoinzActivity extends Activity implements HPPManagerListener {
 			getFragmentManager().beginTransaction().remove(mHppManagerFragment).commitAllowingStateLoss();
 			mHppManagerFragment = null;
 		}
-		if (t.toString() == "00") {
+		if (t.toString().equals("00")) {
 			QoinCounter.setCount(this, QoinCounter.getCount(this) + mNumQoinz);
 			mNumQoinz = 0;
 			finish();
