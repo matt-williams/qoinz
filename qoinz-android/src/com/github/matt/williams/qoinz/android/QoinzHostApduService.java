@@ -5,6 +5,7 @@ import java.util.Arrays;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 public class QoinzHostApduService extends HostApduService {
 	private static final String TAG = "QoinzHostApduService";
@@ -33,16 +34,25 @@ public class QoinzHostApduService extends HostApduService {
     	if (apdu[1] == -92) {
         	return new byte[] { (byte) 0x90, 0x00 };    		
     	} else if (apdu[1] == 1) {
-        	mIsWantPay = true;
-        	QoinzManagerService service = QoinzManagerService.sInstance;
-    		if (service != null) {
-    			service.notifyWantPayChange();
-    		}
-        	return new byte[] { (byte) 0x90, 0x00 };
-        	
+    		if ((QoinState.isAutoPay(this)) && (QoinState.getCount(this) > 0)) {
+    			QoinState.setCount(this, QoinState.getCount(this) - 1);
+            	QoinzManagerService service = QoinzManagerService.sInstance;
+        		if (service != null) {
+        			service.notifyPaid();
+        		}
+        		Toast.makeText(this, "Auto-paid 1 Qoin", Toast.LENGTH_SHORT).show();
+            	return new byte[] { (byte) 0x90, 0x01 };
+    		} else {
+            	mIsWantPay = true;
+            	QoinzManagerService service = QoinzManagerService.sInstance;
+        		if (service != null) {
+        			service.notifyWantPayChange();
+        		}
+            	return new byte[] { (byte) 0x90, 0x00 };
+    		}        	
     	} else if (apdu[1] == 2) {
     		if (mGotQoinz) {
-    			QoinCounter.setCount(this, QoinCounter.getCount(this) - 1);
+    			QoinState.setCount(this, QoinState.getCount(this) - 1);
     			mGotQoinz = false;
             	mIsWantPay = false;
             	QoinzManagerService service = QoinzManagerService.sInstance;

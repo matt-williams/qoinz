@@ -42,7 +42,8 @@
 	        android:layout_centerHorizontal="true"
 	        android:text="Auto pay?"
 	        android:textOff="Manual Pay"
-	        android:textOn="Auto Pay" />
+	        android:textOn="Auto Pay"
+	        android:onClick="toggleAutoPay" />
 
 	    <Button
 	        android:id="@+id/payButton"

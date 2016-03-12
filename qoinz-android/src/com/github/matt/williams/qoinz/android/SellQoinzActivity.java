@@ -26,7 +26,7 @@ public class SellQoinzActivity extends Activity implements HPPManagerListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sell_qoinz);
 		
-		int numQoinz = QoinCounter.getCount(this);
+		int numQoinz = QoinState.getCount(this);
 		((TextView)findViewById(R.id.label)).setText("x" + numQoinz);
 		((TextView)findViewById(R.id.sellButton)).setText("Sell for £" + (float)(numQoinz * 0.5));
 
@@ -67,7 +67,7 @@ public class SellQoinzActivity extends Activity implements HPPManagerListener {
 		//	.add(R.id.fragment_container, mHppManagerFragment)    
 		//	.commit();
 		//}
-		QoinCounter.setCount(this, 0);
+		QoinState.setCount(this, 0);
 		finish();
 	}
 	

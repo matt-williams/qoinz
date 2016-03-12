@@ -84,7 +84,7 @@ void strip_update() {
       strip.setPixelColor(i2, j2 >> 4, j2 >> 4, 0);
       strip.setPixelColor((i1 + strip.numPixels() / 2) % strip.numPixels(), j2 >> 4, j1 >> 4, 0);
       strip.setPixelColor((i2 + strip.numPixels() / 2) % strip.numPixels(), j2 >> 4, j2 >> 4, 0);
-      strip_cycle += 1024;
+      strip_cycle += 2048;
       break;
     case STRIP_STATE_QOIN_ACCEPTED:
       strip.setPixelColor(i1, 0, 0, j1 >> 3);
@@ -273,14 +273,23 @@ void checkForQoin() {
       return;
     }
     //print_hex(F("APDU2"), back, back_len);
-    if ((back[2] != 0x90) || (back[3] != 0x00)) {
+    if ((back[2] == 0x90) && (back[3] == 0x01)) {
+      mfrc522.PICC_HaltA();
+      nfc_step = 6;
+    } else if ((back[2] != 0x90) || (back[3] != 0x00)) {
       strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
       return;
+    } else {
+      nfc_step = 4;
+      nfcCountdown = 60000;
+      strip_cycle = strip_cycle &~ 2047;
+      strip_set_state(STRIP_STATE_COMMUNICATING);
+      strip_update();
+      strip.show();
+      return;
     }
-    nfc_step = 4;
-    return;
   }
 
   if (nfc_step == 4) {
@@ -307,7 +316,7 @@ void checkForQoin() {
     } else {
       nfc_step = 5;
       nfcCountdown = 60000;
-      strip_cycle = strip_cycle &~ 1023;
+      strip_cycle = strip_cycle &~ 2047;
       strip_set_state(STRIP_STATE_COMMUNICATING);
       strip_update();
       strip.show();
@@ -338,7 +347,7 @@ void checkForQoin() {
     } else {
       nfc_step = 4;
       nfcCountdown = 60000;
-      strip_cycle = strip_cycle &~ 1023;
+      strip_cycle = strip_cycle &~ 2047;
       strip_set_state(STRIP_STATE_COMMUNICATING);
       strip_update();
       strip.show();

@@ -7,9 +7,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-public class QoinCounter {
+public class QoinState {
 	private static final String PREFS_NAME = "QoinCounter";
 	private static final String KEY_NUM_QOINZ = "numQoinz";
+	private static final String KEY_AUTO_PAY = "autoPay";
 	private static final String KEY_ID = "id";
 	private static final String TAG = "QoinCounter";
 
@@ -24,6 +25,18 @@ public class QoinCounter {
 		}
 		Log.e(TAG, "id is " + id);
 		return id;
+	}
+
+	public static boolean isAutoPay(Context context) {
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		return prefs.getBoolean(KEY_AUTO_PAY, false);
+	}
+	
+	public static void setAutoPay(Context context, boolean autoPay) {
+		SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+		Editor editor = prefs.edit();
+		editor.putBoolean(KEY_AUTO_PAY, autoPay);
+		editor.commit();
 	}
 	
 	public static int getCount(Context context) {

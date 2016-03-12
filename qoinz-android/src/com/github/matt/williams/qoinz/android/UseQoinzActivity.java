@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class UseQoinzActivity extends Activity {
 
@@ -28,7 +29,7 @@ public class UseQoinzActivity extends Activity {
 		public void wantPayChange() {
 			mHandler.post(new Runnable() {
 				public void run() {
-					findViewById(R.id.payButton).setEnabled(mService.isWantPay() && (QoinCounter.getCount(UseQoinzActivity.this) > 0));					
+					findViewById(R.id.payButton).setEnabled(mService.isWantPay() && (QoinState.getCount(UseQoinzActivity.this) > 0));					
 				}
 			});
 		}
@@ -37,7 +38,7 @@ public class UseQoinzActivity extends Activity {
 		public void paid() {
 			mHandler.post(new Runnable() {
 				public void run() {
-					((TextView)findViewById(R.id.label)).setText("x" + QoinCounter.getCount(UseQoinzActivity.this));
+					((TextView)findViewById(R.id.label)).setText("x" + QoinState.getCount(UseQoinzActivity.this));
 				}
 			});
 		}
@@ -49,7 +50,7 @@ public class UseQoinzActivity extends Activity {
 		SystemRequirementsChecker.checkWithDefaultDialogs(this);
 		setContentView(R.layout.activity_use_qoinz);
 		
-		if (QoinCounter.getCount(this) == 0) {
+		if (QoinState.getCount(this) == 0) {
 			buyMoreQoinz();
 		}
 		
@@ -65,7 +66,7 @@ public class UseQoinzActivity extends Activity {
                 mService.addListener(mListener);
     			mHandler.post(new Runnable() {
     				public void run() {
-    					findViewById(R.id.payButton).setEnabled(mService.isWantPay() && (QoinCounter.getCount(UseQoinzActivity.this) > 0));					
+    					findViewById(R.id.payButton).setEnabled(mService.isWantPay() && (QoinState.getCount(UseQoinzActivity.this) > 0));					
     				}
     			});                
             }
@@ -82,12 +83,14 @@ public class UseQoinzActivity extends Activity {
             Log.e(TAG, "bindService failed");
             Toast.makeText(this, "Failed to bind to Qoinz service", Toast.LENGTH_SHORT).show();
         }
+        
+        ((ToggleButton)findViewById(R.id.toggleButton)).setChecked(QoinState.isAutoPay(this));
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		((TextView)findViewById(R.id.label)).setText("x" + QoinCounter.getCount(this));		
+		((TextView)findViewById(R.id.label)).setText("x" + QoinState.getCount(this));		
 	}
 
 	@Override
@@ -121,6 +124,10 @@ public class UseQoinzActivity extends Activity {
         }
         super.onDestroy();
     }
+	
+	public void toggleAutoPay(View v) {
+		QoinState.setAutoPay(this, ((ToggleButton)v).isChecked());
+	}
 	
 	public void pay(View v) {
 		if (mService != null) {

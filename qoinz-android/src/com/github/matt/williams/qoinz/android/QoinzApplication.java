@@ -75,6 +75,7 @@ public class QoinzApplication extends Application {
 			.build();
 			mNotificationManager.notify(ID_NOTIFICATION, notification);
 		} else if (mWasInRegion) {
+			mWasInRegion = false;
 			Notification notification = new Notification.Builder(this)
 			.setContentTitle("Qoinz Payment")
 			.setContentText("Left Qoinz machines - sell Qoinz")
