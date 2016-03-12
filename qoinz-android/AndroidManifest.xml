@@ -16,14 +16,21 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".UseQoinzActivity"
+            android:label="Qoinz" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity
+            android:name=".BuyQoinzActivity"
+            android:label="Buy Qoinz" >
+        </activity>
+        <activity
+            android:name=".SellQoinzActivity"
+            android:label="Sell Qoinz" >
+        </activity>
+        </application>
 
 </manifest>

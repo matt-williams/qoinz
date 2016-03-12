@@ -11,29 +11,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-public class MainActivity extends Activity implements HPPManagerListener {
+public class SellQoinzActivity extends Activity implements HPPManagerListener {
 
-	private static final String TAG = "MainActivity";
+	private static final String TAG = "SellQoinzActivity";
 	private HPPManager mHppManager;
-	private Fragment mHppManagerFragment;
+	private Fragment mHppManagerFragment = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_sell_qoinz);
+		
+		int numQoinz = QoinCounter.getCount(this);
+		((TextView)findViewById(R.id.label)).setText("x" + numQoinz);
+		((TextView)findViewById(R.id.sellButton)).setText("Sell for £" + (float)(numQoinz * 0.5));
 
 		mHppManager = new HPPManager();
 		Resources res = getResources();
 		mHppManager.setHppRequestProducerURL(res.getString(R.string.hpp_request_producer_url));
 		mHppManager.setHppURL(res.getString(R.string.hpp_url));
 		mHppManager.setHppResponseConsumerURL(res.getString(R.string.hpp_response_consumer_url));
-		
-		mHppManagerFragment = mHppManager.newInstance();
-		getFragmentManager()
-		         .beginTransaction()       
-		         .add(R.id.fragment_container, mHppManagerFragment)    
-		         .commit();		
 	}
 
 	@Override
@@ -54,22 +55,47 @@ public class MainActivity extends Activity implements HPPManagerListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	public void sell(View v) {
+		
+	}
+	
+	private void buyQoinz(int numQoinz, String cost) {
+		if (mHppManagerFragment == null) {
+			mHppManager.setAmount(cost);
+			mHppManager.setCurrency("GBP");
+			mHppManagerFragment = mHppManager.newInstance();
+			getFragmentManager()
+			.beginTransaction()       
+			.add(R.id.fragment_container, mHppManagerFragment)    
+			.commit();
+		}
+	}
 
 	@Override
 	public void hppManagerCompletedWithResult(Object t) {
 		Log.e(TAG, "Completed with result: " + t);
-		getFragmentManager().beginTransaction().remove(mHppManagerFragment).commit(); 
+		if (mHppManagerFragment != null) {
+			getFragmentManager().beginTransaction().remove(mHppManagerFragment).commitAllowingStateLoss();
+			mHppManagerFragment = null;
+		}
 	}
 
 	@Override
 	public void hppManagerFailedWithError(HPPError error) {
 		Log.e(TAG, "Failed with error: " + error);
-		getFragmentManager().beginTransaction().remove(mHppManagerFragment).commit(); 
+		if (mHppManagerFragment != null) {
+			getFragmentManager().beginTransaction().remove(mHppManagerFragment).commitAllowingStateLoss();
+			mHppManagerFragment = null;
+		}
 	}
 
 	@Override
 	public void hppManagerCancelled() {
 		Log.e(TAG, "Cancelled");
-		getFragmentManager().beginTransaction().remove(mHppManagerFragment).commit(); 
+		if (mHppManagerFragment != null) {
+			//getFragmentManager().beginTransaction().remove(mHppManagerFragment).commitAllowingStateLoss();
+			mHppManagerFragment = null;
+		}
 	}
 }
