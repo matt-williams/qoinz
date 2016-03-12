@@ -231,7 +231,6 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     print_hex(F("RATS"), back, back_len);
@@ -248,14 +247,13 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     print_hex(F("APDU"), back, back_len);
     if ((back[2] != 0x90) || (back[3] != 0x00)) {
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     nfc_step = 3;
@@ -269,16 +267,16 @@ void checkForQoin() {
     mfrc522.PCD_CalculateCRC(apdu3, apdu3_len, &apdu3[apdu3_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu3, apdu3_len + 2, back, &back_len, NULL, 0, true)) != 0) {
       Serial.println(sc);
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     print_hex(F("APDU2"), back, back_len);
     if ((back[2] != 0x90) || (back[3] != 0x00)) {
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     nfc_step = 4;
@@ -292,9 +290,9 @@ void checkForQoin() {
     mfrc522.PCD_CalculateCRC(apdu3, apdu3_len, &apdu3[apdu3_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu3, apdu3_len + 2, back, &back_len, NULL, 0, true)) != 0) {
       Serial.println(sc);
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     print_hex(F("APDU3"), back, back_len);
@@ -302,9 +300,9 @@ void checkForQoin() {
       mfrc522.PICC_HaltA();
       nfc_step = 6;
     } else if ((back[2] != 0x90) || (back[3] != 0x00)) {
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     } else {
       nfc_step = 5;
@@ -323,9 +321,9 @@ void checkForQoin() {
     mfrc522.PCD_CalculateCRC(apdu3, apdu3_len, &apdu3[apdu3_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu3, apdu3_len + 2, back, &back_len, NULL, 0, true)) != 0) {
       Serial.println(sc);
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     }
     print_hex(F("APDU4"), back, back_len);
@@ -333,9 +331,9 @@ void checkForQoin() {
       mfrc522.PICC_HaltA();
       nfc_step = 6;
     } else if ((back[2] != 0x90) || (back[3] != 0x00)) {
+      strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
-      strip_show_error();
       return;
     } else {
       nfc_step = 4;
