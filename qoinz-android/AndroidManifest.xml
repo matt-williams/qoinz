@@ -10,16 +10,30 @@
     
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.NFC" />
+    
+    <!-- Needed for Bluetooth low energy scanning. -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Needed for Bluetooth scanning on Android M and above. -->
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Needed for Estimote Cloud. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
 	<uses-feature android:name="android.hardware.nfc.hce" />
     
     <application
+        android:name=".QoinzApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".UseQoinzActivity"
-            android:label="Qoinz" >
+            android:label="Qoinz"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,11 +41,13 @@
         </activity>
         <activity
             android:name=".BuyQoinzActivity"
-            android:label="Buy Qoinz" >
+            android:label="Buy Qoinz"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SellQoinzActivity"
-            android:label="Sell Qoinz" >
+            android:label="Sell Qoinz"
+            android:screenOrientation="portrait">
         </activity>
         <service
             android:name=".QoinzHostApduService"
@@ -46,6 +62,20 @@
         </service>
         <service
             android:name=".QoinzManagerService" />
+        
+        <service
+            android:name="com.estimote.sdk.service.BeaconService"
+            android:exported="false" />
+
+        <activity
+            android:name="com.estimote.sdk.DefaultRequirementsCheckerCallback$Activity"
+            android:theme="@style/Theme.Transparent" />
+
+        <receiver android:name="com.estimote.sdk.service.BeaconService$ScanAlarmBroadcastReceiver" />
+        
+        
         </application>
 
+    
+    
 </manifest>

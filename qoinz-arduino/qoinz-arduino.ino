@@ -38,7 +38,7 @@ void setup() {
 	Serial.begin(9600);		// Initialize serial communications with the PC
 	SPI.begin();			// Init SPI bus
 	mfrc522.PCD_Init();		// Init MFRC522
-	mfrc522.PCD_DumpVersionToSerial();	// Show details of PCD - MFRC522 Card Reader details
+	//mfrc522.PCD_DumpVersionToSerial();	// Show details of PCD - MFRC522 Card Reader details
 
   pinMode(COIN_MECH_PIN1, INPUT_PULLUP);
   pinMode(COIN_MECH_PIN2, INPUT_PULLUP);
@@ -134,8 +134,8 @@ void checkForCoin() {
   } else if ((oldCoinMechPin1 == 1) && (coinMechPin1 == 1) &&
              (oldCoinMechPin2 == 1) && (coinMechPin2 == 0) &&
              (cycles <= 10)) {
-    Serial.print(cycles);
-    Serial.println(F(" coin"));
+    //Serial.print(cycles);
+    Serial.println(F("coin"));
     strip_set_state(STRIP_STATE_COIN_ACCEPTED);
     while (strip_state != STRIP_STATE_IDLE) {
       strip_update();
@@ -233,7 +233,7 @@ void checkForQoin() {
       nfc_step = 0;
       return;
     }
-    print_hex(F("RATS"), back, back_len);
+    //print_hex(F("RATS"), back, back_len);
     nfc_step = 2;
     return;
   }
@@ -244,12 +244,12 @@ void checkForQoin() {
     // Returns 0A 00 6A 82 91 B5
     mfrc522.PCD_CalculateCRC(apdu2, apdu2_len, &apdu2[apdu2_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu2, apdu2_len + 2, back, &back_len, NULL, 0, true)) != 0) {
-      Serial.println(sc);
+      //Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
       return;
     }
-    print_hex(F("APDU"), back, back_len);
+    //print_hex(F("APDU"), back, back_len);
     if ((back[2] != 0x90) || (back[3] != 0x00)) {
       strip_show_error();
       mfrc522.PICC_HaltA();
@@ -266,13 +266,13 @@ void checkForQoin() {
     // Returns 0A 00 6A 82 91 B5
     mfrc522.PCD_CalculateCRC(apdu3, apdu3_len, &apdu3[apdu3_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu3, apdu3_len + 2, back, &back_len, NULL, 0, true)) != 0) {
-      Serial.println(sc);
+      //Serial.println(sc);
       strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
       return;
     }
-    print_hex(F("APDU2"), back, back_len);
+    //print_hex(F("APDU2"), back, back_len);
     if ((back[2] != 0x90) || (back[3] != 0x00)) {
       strip_show_error();
       mfrc522.PICC_HaltA();
@@ -289,13 +289,13 @@ void checkForQoin() {
     // Returns 0A 00 6A 82 91 B5
     mfrc522.PCD_CalculateCRC(apdu3, apdu3_len, &apdu3[apdu3_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu3, apdu3_len + 2, back, &back_len, NULL, 0, true)) != 0) {
-      Serial.println(sc);
+      //Serial.println(sc);
       strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
       return;
     }
-    print_hex(F("APDU3"), back, back_len);
+    //print_hex(F("APDU3"), back, back_len);
     if ((back[2] == 0x90) && (back[3] == 0x01)) {
       mfrc522.PICC_HaltA();
       nfc_step = 6;
@@ -320,13 +320,13 @@ void checkForQoin() {
     byte apdu3_len = 6;
     mfrc522.PCD_CalculateCRC(apdu3, apdu3_len, &apdu3[apdu3_len]);
     if ((sc = mfrc522.PCD_TransceiveData(apdu3, apdu3_len + 2, back, &back_len, NULL, 0, true)) != 0) {
-      Serial.println(sc);
+      //Serial.println(sc);
       strip_show_error();
       mfrc522.PICC_HaltA();
       nfc_step = 0;
       return;
     }
-    print_hex(F("APDU4"), back, back_len);
+    //print_hex(F("APDU4"), back, back_len);
     if ((back[2] == 0x90) && (back[3] == 0x01)) {
       mfrc522.PICC_HaltA();
       nfc_step = 6;
@@ -349,6 +349,7 @@ void checkForQoin() {
   if (nfc_step == 6) {
     mfrc522.PICC_HaltA();
     nfc_step = 0;
+    Serial.println(F("coin"));
     strip_set_state(STRIP_STATE_QOIN_ACCEPTED);
     while (strip_state != STRIP_STATE_IDLE) {
       strip_update();

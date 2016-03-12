@@ -7,5 +7,8 @@
     <string name="hpp_request_producer_url">http://52.87.245.160/qoinz-webapp/request-producer</string>
     <string name="hpp_url">https://hpp.sandbox.realexpayments.com/pay</string>
     <string name="hpp_response_consumer_url">http://52.87.245.160/qoinz-webapp/response-consumer</string>
+    <string name="estimote_beacon_uuid">b9407f30-f5f8-466e-aff9-25556b57fe6d</string>
+    <integer name="estimote_beacon_major">55951</integer>
+    <integer name="estimote_beacon_minor">3229</integer>
     
 </resources>

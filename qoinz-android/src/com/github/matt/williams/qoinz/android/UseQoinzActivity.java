@@ -1,5 +1,6 @@
 package com.github.matt.williams.qoinz.android;
 
+import com.estimote.sdk.SystemRequirementsChecker;
 import com.github.matt.williams.qoinz.android.QoinzManagerService.LocalBinder;
 
 import android.app.Activity;
@@ -45,6 +46,7 @@ public class UseQoinzActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		SystemRequirementsChecker.checkWithDefaultDialogs(this);
 		setContentView(R.layout.activity_use_qoinz);
 		
 		if (QoinCounter.getCount(this) == 0) {

@@ -2,20 +2,12 @@ package com.github.matt.williams.qoinz.android;
 
 import java.util.Arrays;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import android.util.Log;
 
 public class QoinzHostApduService extends HostApduService {
 	private static final String TAG = "QoinzHostApduService";
-	private static final int ID_NOTIFICATION = 1;
-
-	private NotificationManager mNotificationManager;
 	private volatile boolean mGotQoinz;
 	private volatile boolean mIsWantPay;
 
@@ -25,7 +17,6 @@ public class QoinzHostApduService extends HostApduService {
 	public void onCreate() {
 		super.onCreate();
     	Log.e(TAG, "onCreate()");
-    	mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
     	sInstance = this;
 	}
 
@@ -42,13 +33,6 @@ public class QoinzHostApduService extends HostApduService {
     	if (apdu[1] == -92) {
         	return new byte[] { (byte) 0x90, 0x00 };    		
     	} else if (apdu[1] == 1) {
-        	Notification notification = new Notification.Builder(this)
-			.setContentTitle("Qoinz Payment")
-			.setContentText("Tap to pay!")
-			.setSmallIcon(R.drawable.ic_notification)
-			.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, UseQoinzActivity.class), 0))
-			.build();
-        	mNotificationManager.notify(ID_NOTIFICATION, notification);
         	mIsWantPay = true;
         	QoinzManagerService service = QoinzManagerService.sInstance;
     		if (service != null) {
@@ -60,7 +44,6 @@ public class QoinzHostApduService extends HostApduService {
     		if (mGotQoinz) {
     			QoinCounter.setCount(this, QoinCounter.getCount(this) - 1);
     			mGotQoinz = false;
-    	    	mNotificationManager.cancel(ID_NOTIFICATION);
             	mIsWantPay = false;
             	QoinzManagerService service = QoinzManagerService.sInstance;
         		if (service != null) {
@@ -79,7 +62,6 @@ public class QoinzHostApduService extends HostApduService {
 	@Override
 	public void onDeactivated(int reason) {
     	Log.e(TAG, "onDeactivated(" + reason + ")");
-    	mNotificationManager.cancel(ID_NOTIFICATION);
     	mIsWantPay = false;
     	QoinzManagerService service = QoinzManagerService.sInstance;
 		if (service != null) {

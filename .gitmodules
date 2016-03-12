@@ -4,3 +4,6 @@
 [submodule "modules/rxp-hpp-java"]
 	path = modules/rxp-hpp-java
 	url = https://github.com/realexpayments/rxp-hpp-java.git
+[submodule "modules/Estimote-Android-SDK"]
+	path = modules/Estimote-Android-SDK
+	url = https://github.com/Estimote/Android-SDK.git
