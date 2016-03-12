@@ -57,21 +57,20 @@ public class SellQoinzActivity extends Activity implements HPPManagerListener {
 	}
 	
 	public void sell(View v) {
-		
+		// TODO: Rebate user
+		//if (mHppManagerFragment == null) {
+		//	mHppManager.setAmount(cost);
+		//	mHppManager.setCurrency("GBP");
+		//	mHppManagerFragment = mHppManager.newInstance();
+		//	getFragmentManager()
+		//	.beginTransaction()       
+		//	.add(R.id.fragment_container, mHppManagerFragment)    
+		//	.commit();
+		//}
+		QoinCounter.setCount(this, 0);
+		finish();
 	}
 	
-	private void buyQoinz(int numQoinz, String cost) {
-		if (mHppManagerFragment == null) {
-			mHppManager.setAmount(cost);
-			mHppManager.setCurrency("GBP");
-			mHppManagerFragment = mHppManager.newInstance();
-			getFragmentManager()
-			.beginTransaction()       
-			.add(R.id.fragment_container, mHppManagerFragment)    
-			.commit();
-		}
-	}
-
 	@Override
 	public void hppManagerCompletedWithResult(Object t) {
 		Log.e(TAG, "Completed with result: " + t);

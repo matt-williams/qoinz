@@ -95,12 +95,12 @@ public class BuyQoinzActivity extends Activity implements HPPManagerListener {
 
 	@Override
 	public void hppManagerCompletedWithResult(Object t) {
-		Log.e(TAG, "Completed with result: " + t);
+		Log.e(TAG, "Completed with result: " + t.getClass().getCanonicalName());
 		if (mHppManagerFragment != null) {
 			getFragmentManager().beginTransaction().remove(mHppManagerFragment).commitAllowingStateLoss();
 			mHppManagerFragment = null;
 		}
-		if (t.toString().equals("00")) {
+		if (t.toString().equals("{result=00}")) {
 			QoinCounter.setCount(this, QoinCounter.getCount(this) + mNumQoinz);
 			mNumQoinz = 0;
 			finish();
