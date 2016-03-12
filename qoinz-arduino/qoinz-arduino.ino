@@ -84,7 +84,7 @@ void strip_update() {
       strip.setPixelColor(i2, j2 >> 4, j2 >> 4, 0);
       strip.setPixelColor((i1 + strip.numPixels() / 2) % strip.numPixels(), j2 >> 4, j1 >> 4, 0);
       strip.setPixelColor((i2 + strip.numPixels() / 2) % strip.numPixels(), j2 >> 4, j2 >> 4, 0);
-      strip_cycle += 64;
+      strip_cycle += 1024;
       break;
     case STRIP_STATE_QOIN_ACCEPTED:
       strip.setPixelColor(i1, 0, 0, j1 >> 3);
@@ -184,13 +184,32 @@ void print_hex(const __FlashStringHelper* label, byte* data, byte data_len) {
   Serial.println();
 }
 
+void strip_show_error() {
+  for (byte i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, 63, 0, 0);
+  }
+  strip.show();
+}
+
 byte nfc_step = 0;
+unsigned short nfcCountdown = 0;
 void checkForQoin() {
+  if (nfcCountdown > 0) {
+    nfcCountdown--;
+    return;
+  }
+  nfcCountdown = 1000;
+  
   byte back[32];
   byte back_len = 32;
   MFRC522::StatusCode sc;
   
   if (nfc_step == 0) {
+    for (byte i = 0; i < strip.numPixels(); i++) {
+      strip.setPixelColor(i, 0, 0, 0);
+    }
+    strip.show();
+    
     // Look for new cards
     if (!mfrc522.PICC_IsNewCardPresent()) {
       return;
@@ -212,11 +231,12 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
     print_hex(F("RATS"), back, back_len);
-    delay(10);
     nfc_step = 2;
+    return;
   }
 
   if (nfc_step == 2) {
@@ -228,16 +248,18 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
     print_hex(F("APDU"), back, back_len);
     if ((back[2] != 0x90) || (back[3] != 0x00)) {
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
-    delay(10);
     nfc_step = 3;
+    return;
   }
 
   if (nfc_step == 3) {
@@ -249,16 +271,18 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
     print_hex(F("APDU2"), back, back_len);
     if ((back[2] != 0x90) || (back[3] != 0x00)) {
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
-    delay(10);
     nfc_step = 4;
+    return;
   }
 
   if (nfc_step == 4) {
@@ -270,6 +294,7 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
     print_hex(F("APDU3"), back, back_len);
@@ -279,10 +304,16 @@ void checkForQoin() {
     } else if ((back[2] != 0x90) || (back[3] != 0x00)) {
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     } else {
-      delay(1000);
-      nfc_step = 5;  
+      nfc_step = 5;
+      nfcCountdown = 60000;
+      strip_cycle = strip_cycle &~ 1023;
+      strip_set_state(STRIP_STATE_COMMUNICATING);
+      strip_update();
+      strip.show();
+      return;
     }
   }
 
@@ -294,6 +325,7 @@ void checkForQoin() {
       Serial.println(sc);
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     }
     print_hex(F("APDU4"), back, back_len);
@@ -303,10 +335,16 @@ void checkForQoin() {
     } else if ((back[2] != 0x90) || (back[3] != 0x00)) {
       mfrc522.PICC_HaltA();
       nfc_step = 0;
+      strip_show_error();
       return;
     } else {
-      delay(1000);
-      nfc_step = 4;  
+      nfc_step = 4;
+      nfcCountdown = 60000;
+      strip_cycle = strip_cycle &~ 1023;
+      strip_set_state(STRIP_STATE_COMMUNICATING);
+      strip_update();
+      strip.show();
+      return;
     }
   }
 
@@ -320,6 +358,8 @@ void checkForQoin() {
     } 
     strip_update();
     strip.show();
+    nfcCountdown = 60000;
+    return;
   }
 }
 
