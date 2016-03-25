@@ -6,7 +6,7 @@ Pay coin machines with a swipe of your phone
 
 # Why?
 
-According to the European Vending Association, there are 4 million vending machines in Europe and they handle 80 million transactions per day, to a total value of almost 12 billion Euro per year.
+According to the [European Vending Association](http://www.vending-europe.eu/en/7-key-figures-on-the-european-vending-market.html?cmp_id=66&news_id=794), there are 4 million vending machines in Europe and they handle 80 million transactions per day, to a total value of almost 12 billion Euro per year.
 
 Many of them only accept coins - it would be much more convenient if customers could pay electronically.  However, replacing the large number of installed vending machines would be prohibitively expensive.
 
